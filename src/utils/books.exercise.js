@@ -51,7 +51,7 @@ async function refetchBookSearchQuery(user) {
 }
 
 function setQueryDataForBook(book) {
-  queryCache.setQueryData(['book', {bookId: book.id}, book])
+  queryCache.setQueryData(['book', {bookId: book.id}], book)
 }
 
 export {useBook, useBookSearch, refetchBookSearchQuery, setQueryDataForBook}
