@@ -1,11 +1,7 @@
 import * as React from 'react'
-
 import {BrowserRouter as Router} from 'react-router-dom'
 import {ReactQueryConfigProvider} from 'react-query'
-import {AuthProvider} from 'context/auth-context'
-
-// this module doesn't do anything for the exercise. But you'll use this for
-// the extra credit!
+import {AuthProvider} from './auth-context'
 
 const queryConfig = {
   queries: {
@@ -18,13 +14,12 @@ const queryConfig = {
     },
   },
 }
-
 function AppProviders({children}) {
   return (
     <ReactQueryConfigProvider config={queryConfig}>
-      <AuthProvider>
-        <Router>{children}</Router>
-      </AuthProvider>
+      <Router>
+        <AuthProvider>{children}</AuthProvider>
+      </Router>
     </ReactQueryConfigProvider>
   )
 }
