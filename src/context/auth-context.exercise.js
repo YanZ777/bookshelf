@@ -4,12 +4,9 @@ import {jsx} from '@emotion/core'
 import * as React from 'react'
 import {queryCache} from 'react-query'
 import * as auth from 'auth-provider'
-import {FullPageSpinner} from 'components/lib'
-import * as colors from 'styles/colors'
 import {client} from 'utils/api-client'
 import {useAsync} from 'utils/hooks'
-
-const AuthContext = React.createContext()
+import {FullPageSpinner, FullPageErrorFallback} from 'components/lib'
 
 async function getUser() {
   let user = null
@@ -22,6 +19,9 @@ async function getUser() {
 
   return user
 }
+
+const AuthContext = React.createContext()
+AuthContext.displayName = 'AuthContext'
 
 function AuthProvider(props) {
   const {
@@ -53,21 +53,7 @@ function AuthProvider(props) {
   }
 
   if (isError) {
-    return (
-      <div
-        css={{
-          color: colors.danger,
-          height: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <p>Uh oh... There's a problem. Try refreshing the app.</p>
-        <pre>{error.message}</pre>
-      </div>
-    )
+    return <FullPageErrorFallback error={error} />
   }
 
   if (isSuccess) {
@@ -81,9 +67,9 @@ function AuthProvider(props) {
 function useAuth() {
   const context = React.useContext(AuthContext)
   if (context === undefined) {
-    throw new Error(`useAuth must be used within a AuthContext provider`)
+    throw new Error(`useAuth must be used within a AuthProvider`)
   }
   return context
 }
 
-export {AuthContext, useAuth, AuthProvider}
+export {AuthProvider, useAuth}
