@@ -10,15 +10,12 @@ import {
   Spinner,
   FormGroup,
   ErrorMessage,
-  // 💣 when you're all done, you won't need this Dialog anymore
-  // you can remove this now or later when you've finished
 } from './components/lib'
-// 🐨 import all the Modal compound components you created in ./components/modal
 import {
   Modal,
   ModalDismissButton,
-  ModalOpenButton,
   ModalContents,
+  ModalOpenButton,
 } from './components/modal'
 import {Logo} from './components/logo'
 import {useAuth} from './context/auth-context'
@@ -108,15 +105,14 @@ function UnauthenticatedApp() {
           gridGap: '0.75rem',
         }}
       >
-        {/* 🐨 replace both of these with the Modal compound components */}
-        {/*
-          🦉 when you're done, it'll look a lot more complicated than
-             it did when you started, but the extra credits will help clean
-             things up a bit.
-        */}
         <Modal>
           <ModalOpenButton>
-            <Button variant="primary">Login</Button>
+            <Button
+              onClick={() => console.log('opening the modal')}
+              variant="primary"
+            >
+              Login
+            </Button>
           </ModalOpenButton>
           <ModalContents aria-label="Login form">
             {circleDismissButton}
@@ -127,17 +123,16 @@ function UnauthenticatedApp() {
             />
           </ModalContents>
         </Modal>
-
         <Modal>
           <ModalOpenButton>
-            <Button variant="primary">Register</Button>
+            <Button variant="secondary">Register</Button>
           </ModalOpenButton>
-          <ModalContents aria-label="Register form">
+          <ModalContents aria-label="Registration form">
             {circleDismissButton}
             <h3 css={{textAlign: 'center', fontSize: '2em'}}>Register</h3>
             <LoginForm
               onSubmit={register}
-              submitButton={<Button variant="primary">Register</Button>}
+              submitButton={<Button variant="secondary">Register</Button>}
             />
           </ModalContents>
         </Modal>
