@@ -4,6 +4,14 @@ import {jsx} from '@emotion/core'
 import * as React from 'react'
 import {Dialog} from './lib'
 
+import VisuallyHidden from '@reach/visually-hidden'
+import {CircleButton} from './lib'
+
+const callAll =
+  (...fns) =>
+  (...args) =>
+    fns.forEach(fn => fn && fn(...args))
+
 const ModalContext = React.createContext()
 
 function Modal(props) {
@@ -12,32 +20,52 @@ function Modal(props) {
   return <ModalContext.Provider value={[isOpen, setIsOpen]} {...props} />
 }
 
-const callAll =
-  (...fns) =>
-  (...args) =>
-    fns.forEach(fn => fn?.(...args))
-
 function ModalDismissButton({children: child}) {
   const [, setIsOpen] = React.useContext(ModalContext)
-  const toggle = () => setIsOpen(false)
   return React.cloneElement(child, {
-    onClick: callAll(toggle, child.props.onClick),
+    onClick: callAll(() => setIsOpen(false), child.props.onClick),
   })
 }
 
 function ModalOpenButton({children: child}) {
   const [, setIsOpen] = React.useContext(ModalContext)
-  const toggle = () => setIsOpen(true)
   return React.cloneElement(child, {
-    onClick: callAll(toggle, child.props.onClick),
+    onClick: callAll(() => setIsOpen(true), child.props.onClick),
   })
 }
 
-function ModalContents(props) {
+function ModalContentsBase(props) {
   const [isOpen, setIsOpen] = React.useContext(ModalContext)
   return (
     <Dialog isOpen={isOpen} onDismiss={() => setIsOpen(false)} {...props} />
   )
 }
 
-export {Modal, ModalDismissButton, ModalOpenButton, ModalContents}
+const circleDismissButton = (
+  <div css={{display: 'flex', justifyContent: 'flex-end'}}>
+    <ModalDismissButton>
+      <CircleButton>
+        <VisuallyHidden>Close</VisuallyHidden>
+        <span aria-hidden>×</span>
+      </CircleButton>
+    </ModalDismissButton>
+  </div>
+)
+
+function ModalContents({title, children, ...props}) {
+  return (
+    <ModalContentsBase {...props}>
+      {circleDismissButton}
+      <h3 css={{textAlign: 'center', fontSize: '2em'}}>{title}</h3>
+      {children}
+    </ModalContentsBase>
+  )
+}
+
+export {
+  Modal,
+  ModalDismissButton,
+  ModalOpenButton,
+  ModalContents,
+  ModalContentsBase,
+}
