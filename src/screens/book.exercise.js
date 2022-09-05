@@ -13,8 +13,8 @@ import * as mq from 'styles/media-queries'
 import * as colors from 'styles/colors'
 import {Spinner, Textarea, ErrorMessage} from 'components/lib'
 import {Rating} from 'components/rating'
-import {StatusButtons} from 'components/status-buttons'
 import {Profiler} from 'components/profiler'
+import {StatusButtons} from 'components/status-buttons'
 
 function BookScreen() {
   const {bookId} = useParams()
@@ -104,10 +104,9 @@ function ListItemTimeframe({listItem}) {
 
 function NotesTextarea({listItem}) {
   const [mutate, {error, isError, isLoading}] = useUpdateListItem()
-  const debouncedMutate = React.useMemo(
-    () => debounceFn(mutate, {wait: 300}),
-    [mutate],
-  )
+  const debouncedMutate = React.useMemo(() => debounceFn(mutate, {wait: 300}), [
+    mutate,
+  ])
 
   function handleNotesChange(e) {
     debouncedMutate({id: listItem.id, notes: e.target.value})

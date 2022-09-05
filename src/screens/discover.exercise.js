@@ -86,7 +86,7 @@ function DiscoverBooksScreen() {
         )}
         {books.length ? (
           <Profiler
-            id="Discover Books Screen List"
+            id="Discover Books Screen Book List"
             metadata={{query, bookCount: books.length}}
           >
             <BookListUL css={{marginTop: 20}}>
