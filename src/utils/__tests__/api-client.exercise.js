@@ -8,12 +8,6 @@ const apiURL = process.env.REACT_APP_API_URL
 jest.mock('react-query')
 jest.mock('auth-provider')
 
-// enable API mocking in test runs using the same request handlers
-// as for the client-side mocking.
-beforeAll(() => server.listen())
-afterAll(() => server.close())
-afterEach(() => server.resetHandlers())
-
 test('makes GET requests to the given endpoint', async () => {
   const endpoint = 'test-endpoint'
   const mockResult = {mockValue: 'VALUE'}
@@ -82,19 +76,7 @@ test('when data is provided, it is stringified and the method defaults to POST',
   expect(result).toEqual(data)
 })
 
-test('when the response ok is false, the promise is rejected with data returned from the server', async () => {
-  const endpoint = 'test-endpoint'
-  const testError = {message: 'Test error'}
-  server.use(
-    rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
-      return res(ctx.status(400), ctx.json(testError))
-    }),
-  )
-
-  await expect(client(endpoint)).rejects.toEqual(testError)
-})
-
-test('when the response statis is 401 unauthorized, the user is logged out and the cache is cleared', async () => {
+test('automatically logs the user out if a request returns a 401', async () => {
   const endpoint = 'test-endpoint'
   const mockResult = {mockValue: 'VALUE'}
   server.use(
@@ -109,4 +91,16 @@ test('when the response statis is 401 unauthorized, the user is logged out and t
 
   expect(queryCache.clear).toHaveBeenCalledTimes(1)
   expect(auth.logout).toHaveBeenCalledTimes(1)
+})
+
+test('correctly rejects the promise if there is an error', async () => {
+  const endpoint = 'test-endpoint'
+  const testError = {message: 'Test error'}
+  server.use(
+    rest.get(`${apiURL}/${endpoint}`, async (req, res, ctx) => {
+      return res(ctx.status(400), ctx.json(testError))
+    }),
+  )
+
+  await expect(client(endpoint)).rejects.toEqual(testError)
 })
