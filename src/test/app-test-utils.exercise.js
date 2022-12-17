@@ -4,9 +4,9 @@ import {
   waitForElementToBeRemoved,
 } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import * as auth from 'auth-provider'
-import {buildUser} from 'test/generate'
 import {AppProviders} from 'context'
+import * as auth from 'auth-provider'
+import {buildUser} from './generate'
 import * as usersDB from './data/users'
 
 async function render(ui, {route = '/list', user, ...renderOptions} = {}) {
